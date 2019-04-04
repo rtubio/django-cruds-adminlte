@@ -28,6 +28,9 @@ import types
 
 class CRUDMixin(object):
 
+    success_url = ''
+    fields = []
+
     def get_template_names(self):
         dev = []
         base_name = "%s/%s/" % (self.model._meta.app_label,
@@ -556,12 +559,14 @@ class CRUDView(object):
         fields = self.fields
         if self.add_form:
             fields = None
-        self.create = self.decorator_create(OCreateView.as_view(
+        print('>>> create_view = ' + str(OCreateView))
+        ocv = OCreateView.as_view(
             model=self.model,
             fields=fields,
             success_url=reverse_lazy(url),
             template_name=basename
-        ))
+        )
+        self.create = self.decorator_create(ocv)
 
     def initialize_detail(self, basename):
         ODetailView = self.get_detail_view()
